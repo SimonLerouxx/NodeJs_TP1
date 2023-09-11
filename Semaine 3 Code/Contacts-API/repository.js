@@ -81,4 +81,12 @@ export default class Repository {
         }
         return null;
     }
+
+    get(categorie){
+        for (let object of this.objects()) {
+            if (object.Categorie === categorie)
+                return object;
+        }
+        return null;
+    }
 }

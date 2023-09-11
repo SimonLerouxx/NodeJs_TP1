@@ -14,6 +14,7 @@ function Init_UI() {
     $('#aboutCmd').on("click", function () {
         renderAbout();
     });
+
 }
 
 function renderAbout() {
@@ -158,8 +159,15 @@ function renderContactForm(contact = null) {
     let create = contact == null;
     if (create) contact = newContact();
     $("#actionTitle").text(create ? "Création" : "Modification");
+   
+    //$("#content").append(`<form class="form" id="contactForm">`);
+
+   $("#content").append(create ? `Création` :  `<div class="big-favicon"
+        style="background-image: url('http://www.google.com/s2/favicons?sz=64&domain=${contact.Url}/');">
+     </div>`);
+
     $("#content").append(`
-        <form class="form" id="contactForm">
+            <form class="form" id="contactForm">
             <input type="hidden" name="Id" value="${contact.Id}"/>
 
             <label for="Titre" class="form-label">Titre </label>
