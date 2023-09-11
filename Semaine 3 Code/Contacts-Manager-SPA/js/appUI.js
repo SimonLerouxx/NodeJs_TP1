@@ -25,14 +25,13 @@ function renderAbout() {
     $("#content").append(
         $(`
             <div class="aboutContainer">
-                <h2>Gestionnaire de contacts</h2>
+                <h2>Gestionnaire de Favoris</h2>
                 <hr>
                 <p>
-                    Petite application de gestion de contacts à titre de démonstration
-                    d'interface utilisateur monopage réactive.
+                    Petite application de gestion de favoris 
                 </p>
                 <p>
-                    Auteur: Nicolas Chourot
+                    Auteur: Nicolas Chourot & Simon Leroux
                 </p>
                 <p>
                     Collège Lionel-Groulx, automne 2023
@@ -42,7 +41,7 @@ function renderAbout() {
 }
 async function renderContacts() {
     showWaitingGif();
-    $("#actionTitle").text("Liste des contacts");
+    $("#actionTitle").text("Liste des favoris");
     $("#createContact").show();
     $("#abort").hide();
     let contacts = await Contacts_API.Get();
@@ -98,7 +97,7 @@ async function renderEditContactForm(id) {
     if (contact !== null)
         renderContactForm(contact);
     else
-        renderError("Contact introuvable!");
+        renderError("Favori introuvable!");
 }
 async function renderDeleteContactForm(id) {
     showWaitingGif();
@@ -110,14 +109,17 @@ async function renderDeleteContactForm(id) {
     if (contact !== null) {
         $("#content").append(`
         <div class="contactdeleteForm">
-            <h4>Effacer le contact suivant?</h4>
+            <h4>Effacer le favori suivant?</h4>
             <br>
             <div class="contactRow" contact_id=${contact.Id}">
                 <div class="contactContainer">
                     <div class="contactLayout">
-                        <div class="contactName">${contact.Name}</div>
-                        <div class="contactPhone">${contact.Phone}</div>
-                        <div class="contactEmail">${contact.Email}</div>
+                    <div class="big-favicon"
+                    style="background-image: url('http://www.google.com/s2/favicons?sz=64&domain=${contact.Url}/');">
+                    
+                </div>
+                        <div class="contactName">${contact.Titre}</div>
+                        <div class="contactEmail">${contact.Categorie}</div>
                     </div>
                 </div>  
             </div>   
@@ -144,9 +146,9 @@ async function renderDeleteContactForm(id) {
 function newContact() {
     contact = {};
     contact.Id = 0;
-    contact.Name = "";
-    contact.Phone = "";
-    contact.Email = "";
+    contact.Titre = "";
+    contact.Url = "";
+    contact.Categorie = "";
     return contact;
 }
 function renderContactForm(contact = null) {
@@ -160,38 +162,38 @@ function renderContactForm(contact = null) {
         <form class="form" id="contactForm">
             <input type="hidden" name="Id" value="${contact.Id}"/>
 
-            <label for="Name" class="form-label">Nom </label>
+            <label for="Titre" class="form-label">Titre </label>
             <input 
                 class="form-control Alpha"
-                name="Name" 
-                id="Name" 
-                placeholder="Nom"
+                name="Titre" 
+                id="Titre" 
+                placeholder="Titre"
                 required
-                RequireMessage="Veuillez entrer un nom"
-                InvalidMessage="Le nom comporte un caractère illégal" 
-                value="${contact.Name}"
+                RequireMessage="Veuillez entrer un titre"
+                InvalidMessage="Le titre comporte un caractère illégal" 
+                value="${contact.Titre}"
             />
-            <label for="Phone" class="form-label">Téléphone </label>
+            <label for="Url" class="form-label">Url </label>
             <input
-                class="form-control Phone"
-                name="Phone"
-                id="Phone"
-                placeholder="(000) 000-0000"
+                class="form-control"
+                name="Url"
+                id="Url"
+                placeholder="http://"
                 required
-                RequireMessage="Veuillez entrer votre téléphone" 
-                InvalidMessage="Veuillez entrer un téléphone valide"
-                value="${contact.Phone}" 
+                RequireMessage="Veuillez entrer un Url" 
+                InvalidMessage="Veuillez entrer un Url valide"
+                value="${contact.Url}" 
             />
-            <label for="Email" class="form-label">Courriel </label>
+            <label for="Categorie" class="form-label">Categorie </label>
             <input 
-                class="form-control Email"
-                name="Email"
-                id="Email"
-                placeholder="Courriel"
+                class="form-control"
+                name="Categorie"
+                id="Categorie"
+                placeholder="Categorie"
                 required
-                RequireMessage="Veuillez entrer votre courriel" 
-                InvalidMessage="Veuillez entrer un courriel valide"
-                value="${contact.Email}"
+                RequireMessage="Veuillez entrer une categorie" 
+                InvalidMessage="Veuillez entrer une Categorie valide"
+                value="${contact.Categorie}"
             />
             <hr>
             <input type="submit" value="Enregistrer" id="saveContact" class="btn btn-primary">
@@ -226,16 +228,22 @@ function getFormData($form) {
 
 function renderContact(contact) {
     return $(`
+    
      <div class="contactRow" contact_id=${contact.Id}">
+     
         <div class="contactContainer noselect">
             <div class="contactLayout">
-                <span class="contactName">${contact.Name}</span>
-                <span class="contactPhone">${contact.Phone}</span>
-                <span class="contactEmail">${contact.Email}</span>
+                <div class="big-favicon"
+                    style="background-image: url('http://www.google.com/s2/favicons?sz=64&domain=${contact.Url}/');">
+                    
+                </div>
+                <span class="contactName">${contact.Titre}</span>
+                
+                <span class="contactEmail">${contact.Categorie}</span>
             </div>
             <div class="contactCommandPanel">
-                <span class="editCmd cmdIcon fa fa-pencil" editContactId="${contact.Id}" title="Modifier ${contact.Name}"></span>
-                <span class="deleteCmd cmdIcon fa fa-trash" deleteContactId="${contact.Id}" title="Effacer ${contact.Name}"></span>
+                <span class="editCmd cmdIcon fa fa-pencil" editContactId="${contact.Id}" title="Modifier ${contact.Titre}"></span>
+                <span class="deleteCmd cmdIcon fa fa-trash" deleteContactId="${contact.Id}" title="Effacer ${contact.Titre}"></span>
             </div>
         </div>
     </div>           

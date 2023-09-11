@@ -26,9 +26,11 @@ function response(res, status, data = null) {
     return true;
 }
 async function handleContactsRequest(req, res) {
+
     let contactsRepository = new Repository("./contacts.json");
     let contact = null;
     if (req.url == "/api/contacts") {
+        
         switch (req.method) {
             case "GET":
                 return response(res, 200, JSON.stringify(contactsRepository.getAll()));
@@ -60,6 +62,7 @@ async function handleContactsRequest(req, res) {
                     else
                         return response(res, 404);
                 case "DELETE":
+                    
                     if (contactsRepository.remove(id))
                         return response(res, 202);
                     else
@@ -89,8 +92,11 @@ function CORS_Preflight(req, res) {
 }
 const server = createServer(async (req, res) => {
     console.log(req.method);
+    
     accessControlConfig(req, res);
+    
     if (!CORS_Preflight(req, res))
+    
         if (!handleContactsRequest(req, res))
             response(res, 404);
 });

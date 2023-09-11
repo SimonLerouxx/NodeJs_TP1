@@ -9,7 +9,7 @@
     display: grid;
     grid-template-columns: 4fr 1fr;
     align-items: top;
-    background-color: rgb(87, 140, 255);
+    background-color: rgb(70, 70, 70);
     border-radius: 6px;
 }
 
@@ -53,4 +53,14 @@
 
 .contactdeleteForm {
     margin: 20px;
+}
+
+.big-favicon {
+    text-align: center;
+    background-image: url("../bookmark_logo.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 48px;
+    width: 48px;
+    margin-right: 5px;
 }
