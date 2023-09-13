@@ -85,7 +85,7 @@ export default class Repository {
     }
 
     getFav(id){
-        
+        console.log("jrehbg");
         for (let object of this.objects()) {
             console.log(object.Id);
             if (object.Id === id)
