@@ -56,7 +56,8 @@ async function handleContactsRequest(req, res) {
             let id = parseInt(req.url.substring(req.url.lastIndexOf("/") + 1, req.url.length));
             switch (req.method) {
                 case "GET":
-                    let contact = contactsRepository.get(id);
+                   
+                    let contact = contactsRepository.getFav(id);
                     if (contact !== null)
                         return response(res, 200, JSON.stringify(contact));
                     else
