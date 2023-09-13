@@ -4,6 +4,7 @@ Init_UI();
 
 function Init_UI() {
     renderContacts();
+    renderListCategorie();
     $('#createContact').on("click", async function () {
         saveContentScrollPosition();
         renderCreateContactForm();
@@ -14,8 +15,50 @@ function Init_UI() {
     $('#aboutCmd').on("click", function () {
         renderAbout();
     });
+    $('#allCatCmd').on("click", function () {
+        renderContacts();
+    });
+    
+
+
+    
 
 }
+
+
+
+async function renderListCategorie() {
+    let contacts = await Contacts_API.Get();
+    let tabCat =[];
+    contacts.forEach(contact => {
+        
+
+       
+        if(!tabCat.includes(contact.Categorie)){
+            let newItem = '<div class="dropdown-item menuItemLayout category" id="allCatCmd'+contact.Categorie+'">';
+            newItem += '<i class="menuIcon fa fa-fw mx-2"></i>' + contact.Categorie;
+            $("#DDMenu").append(newItem);
+
+            $('#allCatCmd'+contact.Categorie).on("click", function () {
+                renderContactsCategorie(contact.Categorie);
+            });
+            tabCat.push(contact.Categorie);
+        }
+
+        
+    });
+
+    $("#DDMenu").append('<div class="dropdown-divider"></div><div class="dropdown-item menuItemLayout" id="aboutCmd"><i class="menuIcon fa fa-info-circle mx-2"></i> À propos...</div>');
+    $('#aboutCmd').on("click", function () {
+        renderAbout();
+    });
+
+    
+}
+
+
+
+
 
 function renderAbout() {
     saveContentScrollPosition();
@@ -66,6 +109,44 @@ async function renderContacts() {
         renderError("Service introuvable");
     }
 }
+
+async function renderContactsCategorie(categorie) {
+    showWaitingGif();
+    $("#actionTitle").text("Liste des favoris");
+    $("#createContact").show();
+    $("#abort").hide();
+    let contacts = await Contacts_API.Get();
+    let goodContacts = [];
+
+    contacts.forEach(contact => {
+        if(contact.Categorie == categorie){
+            goodContacts.push(contact)
+        }
+    });
+
+
+    eraseContent();
+    if (goodContacts !== null) {
+        goodContacts.forEach(contact => {
+            $("#content").append(renderContact(contact));
+        });
+        restoreContentScrollPosition();
+        // Attached click events on command icons
+        $(".editCmd").on("click", function () {
+            saveContentScrollPosition();
+            renderEditContactForm(parseInt($(this).attr("editContactId")));
+        });
+        $(".deleteCmd").on("click", function () {
+            saveContentScrollPosition();
+            renderDeleteContactForm(parseInt($(this).attr("deleteContactId")));
+        });
+        $(".contactRow").on("click", function (e) { e.preventDefault(); })
+    } else {
+        renderError("Service introuvable");
+    }
+}
+
+
 function showWaitingGif() {
     $("#content").empty();
     $("#content").append($("<div class='waitingGifcontainer'><img class='waitingGif' src='Loading_icon.gif' /></div>'"));
@@ -215,8 +296,10 @@ function renderContactForm(contact = null) {
         contact.Id = parseInt(contact.Id);
         showWaitingGif();
         let result = await Contacts_API.Save(contact, create);
-        if (result)
+        if (result){
             renderContacts();
+        }
+            
         else
             renderError("Une erreur est survenue!");
     });
