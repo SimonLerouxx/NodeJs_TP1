@@ -72,10 +72,22 @@ export default class Repository {
         return false;
     }
     getAll(params = null) {
+        
         return this.objects();
     }
     get(id) {
+
         for (let object of this.objects()) {
+            if (object.Id === id)
+                return object;
+        }
+        return null;
+    }
+
+    getFav(id){
+        
+        for (let object of this.objects()) {
+            console.log(object.Id);
             if (object.Id === id)
                 return object;
         }
